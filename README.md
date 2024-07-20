@@ -1,6 +1,6 @@
 # Automatizando Infraestrutura de Processamento de Dados com AWS EMR e Apache Flink 🚀
 
-![alt text](image-2.png)
+![alt text](./images/image.png)
 
 ### Qual o produto final desenvolvido?
 - ♨️ Foi criada uma solução de infraestrutura para processamento de dados, que pode rapidamente ser provisionada com dois comandos(sim, isso mesmo, dois comandos), podendo ser utilizada e adaptada para os mais variados tipos de demandas, seja para processamento moderado, até grandes volumes de dados.
@@ -196,7 +196,7 @@ Args="flink","run","-m","yarn-cluster",\
 ```
 
 utilizando o S3 como input e output dos dados e resultados.
-![alt text](image-1.png)
+![alt text](./images/image-1.png)
 ```
 aws emr add-steps --cluster-id j-32R8POOJ1HIMA \
 --steps Type=CUSTOM_JAR,Name=Job2_P1,Jar=command-runner.jar,\

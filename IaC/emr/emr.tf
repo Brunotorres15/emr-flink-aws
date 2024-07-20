@@ -10,7 +10,7 @@ variable "environment" {}
 variable "configurations" {}
 variable "applications" {}
 variable "bucket_log_uri" {
-    default = "s3://bucket-logs-<account-id>"
+    default = "s3://<emr-logs-<account-id>"
 }
 
 # variable "steps" {

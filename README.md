@@ -10,7 +10,7 @@
 - 🚀 Esse projeto tem o objetivo principal de demonstrar um exemplo da automatização, configuração e o gerenciamento da infraestrutura necessária para executar pipelines de processamento de dados em lote e streaming, capazes de lidar com grandes volumes de dados com baixa latência.
 
 
-- 📌 O processamento a ser realizado neste projeto, é um processamento simples visando a demonstração de como seria esse provisionamento e automação fim-a-fim de uma infraestrutura real! Com seu próprio script (em pyspark por exemplo), e claro, ajuste nas capacidades dos cluster (pelo próprio código), a infraestrutura aprendida aqui pode ser utilizada para suportar pipelines de dados super robustas.
+- 📌 O processamento a ser realizado neste projeto, é um processamento simples visando a demonstração de como seria esse provisionamento e automação fim-a-fim de uma infraestrutura real! Com seu próprio script (em pyspark por exemplo), e claro, ajuste nas capacidades dos clusters (o que pode ser feito pelo próprio código 😉), a infraestrutura aprendida aqui pode ser utilizada para suportar pipelines de dados super robustas.
 - ⚠️ **Cuidado!** Os serviços provisionados por esse projeto **NÃO** são gratuitos, apesar de ser um exemplo simples, justamente pra não incorrer grandes custos durante o estudo, deixar a infraestrutura rodando por cerca de 1 hora, pode gerar custos entre $0.70 a $1.10 Dólares (por hora), não é muito, mas não vai esquecer o cluster ligado em 🚨.
 
 ### O que você verá aqui?
@@ -80,17 +80,16 @@ docker run -dit --name emr-flink-aws-container -v ./IaC:/iac emr-flink-aws-image
 ```
 NOTA: No Windows você deve substituir ./IaC pelo caminho completo da pasta
 
-### Acesse o container docker e verifique as versões do Terraform e do AWS CLI com os comandos
+### Acesse o container docker e verifique a versão do Terraform com o comando
 
 ```
 terraform version
-aws --version
 ```
 
 ## Provisionando uma Infraestrutura de processamento com AWS EMR e Apache Flink ✅
 
 
-📌 Crie um bucket no S3 chamado **bucket-logs-\<account-id>** e configure no arquivo **emr.tf**,
+📌 Crie um bucket no S3 chamado **emr-logs-\<account-id>** e configure no arquivo **emr.tf**,
 utilizaremos este bucket como uma fonte externa para guardar os logs do cluster. 
 
 ### Configure as suas credenciais de acesso à AWS via cli
@@ -98,7 +97,7 @@ utilizaremos este bucket como uma fonte externa para guardar os logs do cluster.
 aws configure
 ```
 
-### Inicializa o Terraform
+### Inicialize o Terraform
 ```
 terraform init
 ```
@@ -123,6 +122,9 @@ terraform apply -auto-approve -var-file config.tfvars
 ```
 terraform apply -var-file config.tfvars
 ```
+
+### Cluster de pé e pronto pra receber os steps pra execução
+![alt text](./images/image-6.png)
 
 # 😵‍💫 Tá, mas o que isso quer dizer?
 
@@ -150,7 +152,7 @@ ssh -i deployer hadoop@ec2-3-14-29-59.us-east-2.compute.amazonaws.com
 hdfs dfs -mkdir /user/root/input
 ```
 
-### Crie um arquivo de texte como por exemplo:
+### Crie um arquivo txt como por exemplo:
 ```
 vi dados.txt
 ```
@@ -158,6 +160,12 @@ vi dados.txt
 
 ```
 IaC (Infraestrutura Como Código) nasceu no universo DevOps, mas rapidamente chegou à área de dados para ajudar no trabalho de Engenheiros de Dados, Engenheiros de Machine Learning, Arquitetos de Dados, Cientistas de Dados e Engenheiros de IA.
+
+Neste curso você vai desenvolver suas habilidades com Terraform, uma ferramenta open-source que permite definir a infraestrutura como código usando uma linguagem simples e declarativa e implantar e gerenciar essa infraestrutura em uma variedade de provedores de cloud computing (em nuvem pública ou privada) e virtualização, com apenas alguns comandos.
+
+Além do Terraform você vai trabalhar com AWS, Azure e Databricks através de diversos Labs e Projetos. O conhecimento que você irá adquirir neste curso vai colocá-lo muito a frente de outros profissionais do mercado, aumentando de forma considerável sua empregabilidade na área de dados, independente da sua função.
+
+Este é um curso realmente único, praticamente um trabalho de consultoria para você, no padrão de qualidade da Data Science Academy.
 ```
 
 ### Copie o arquivo criado para o 
@@ -166,25 +174,113 @@ IaC (Infraestrutura Como Código) nasceu no universo DevOps, mas rapidamente che
 hdfs dfs -put dados.txt /user/root/input
 ```
 
-### Vamos contar o número de ocorrências de cada palavra no arquivo usando Apache Flink
+### Vamos contar o número de ocorrências de cada palavra no arquivo, usando um script padrão que já vem com o Apache Flink
 ```
 flink run -m yarn-cluster /usr/lib/flink/examples/streaming/WordCount.jar --input hdfs:///user/root/input/dados.txt --output hdfs:///user/root/saida/
 ```
+- Obs: `flink run` Este é o comando principal para submeter um job para o Apache Flink. O run indica que você está executando um job de Flink.
+- `-m yarn-cluster`  opção -m (ou --jobmanager) especifica o modo de execução do Flink. Neste caso, yarn-cluster indica que o Flink está sendo executado no modo cluster gerenciado pelo YARN (Yet Another Resource Negotiator), que é um gerenciador de recursos do Hadoop. O Flink executará o job em um cluster YARN.
+- `/usr/lib/flink/examples/streaming/WordCount.jar` Este é o caminho para o arquivo JAR (Java ARchive) que contém o código do job de Flink que será executado. No exemplo, WordCount.jar é um exemplo padrão que conta o número de ocorrências de cada palavra em um fluxo de dados.
+`--input hdfs:///user/root/input/dados.txt` O parâmetro --input especifica o caminho para o arquivo de entrada que o job de Flink usará. No caso, o arquivo dados.txt está localizado no HDFS (Hadoop Distributed File System) no diretório /user/root/input/. HDFS é um sistema de arquivos distribuído que armazena grandes volumes de dados.
+- `--output hdfs:///user/root/saida/` O parâmetro - --output especifica o caminho onde os resultados do job de Flink serão armazenados. Neste caso, os resultados serão armazenados no HDFS no diretório /user/root/saida/.
 
-### Copie o arquivo do HDFS para o sistema de arquivos.
+### Resultado da Execução do Step no Cluster ERM na AWS
+![alt text](./images/image-5.png)
+
+### Veja o nome dos arquivos de saída.
 ```
-hdfs dfs -get nome-arquivo-no-HDFS
+hdfs dfs -ls /user/root/saida/
 ```
 
-### ✅ E pronto! Dessa forma utilizamos o Apache Flink pra realizar um processamento em um Cluster EMR e temos o resultado deste processamento!  ✅
-- 📌 Vale ressaltar que foi um exemplo simples de processamento, com a ideia de mostrar como seria essa implementação e execução dessas rotinas.
-- 📌 Utilizando algum outro script e grandes conjuntos de dados por exemplo, esta mesma lógica serviria pra realizar um processamento em larga escala (temos que começar pequeno e ir escalando 😉 )! 
+### Copie o arquivo de saída no HDFS para o sistema de arquivos.
+```
+hdfs dfs -get caminho-e-nome-arquivo-no-HDFS
+```
+### Faça um cat (comando linux) do arquivo pra ver o resultado:
+```
+(como,1)
+(c,1)
+(digo,1)
+(devops,1)
+(chegou,1)
+(rea,1)
+(machine,1)
+(arquitetos,1)
+(cientistas,1)
+(e,1)
+(desenvolver,1)
+(habilidades,1)
+(com,1)
+(terraform,1)
+(uma,1)
+(que,1)
+(permite,1)
+(definir,1)
+(como,2)
+(c,2)
+(digo,2)
+(usando,1)
+(uma,2)
+(linguagem,1)
+(simples,1)
+(e,2)
+(e,3)
+(implantar,1)
+(e,4)
+(gerenciar,1)
+(em,1)
+(uma,3)
+(variedade,1)
+(provedores,1)
+(cloud,1)
+(computing,1)
+(em,2)
+(ou,1)
+(privada,1)
+(e,5)
+(virtualiza,1)
+(o,1)
+(com,2)
+(al,1)
+(do,1)
+(terraform,2)
+(trabalhar,1)
+(com,3)
+(e,6)
+(e,7)
+(o,2)
+(que,2)
+(ir,1)
+(adquirir,1)
+(lo,1)
+(profissionais,1)
+(do,2)
+(mercado,1)
+(aumentando,1)
+(forma,1)
+(sua,1)
+(empregabilidade,1)
+(rea,2)
+(da,1)
+(sua,2)
+(o,3)
+(este,1)
+(praticamente,1)
+(o,4)
+(qualidade,1)
+(da,2)
+(data,1)
+(science,1)
+
+```
+
+___
 
 ## ⏭️ Outras formas de enviar essas estapas pro cluster sem Acessar via SSH
  
-#### Os comandos abaixo devem ser executados no container Docker (máquina cliente), dessa forma você não precisaria acessar o master node via ssh.
+### ****Os comandos abaixo devem ser executados no container Docker (máquina cliente), dessa forma você não precisaria acessar o master node via ssh.****
 
-Utilizando a própria cli da AWS pra adicionar os steps
+#### Utilizando a própria cli da AWS pra adicionar os steps
 (Lembre de colocar o ID do seu cluster EMR).
 ```
 aws emr add-steps --cluster-id j-NF8210OHK2AH \
@@ -194,9 +290,13 @@ Args="flink","run","-m","yarn-cluster",\
 "--input","hdfs:///user/root/input/dados.txt","--output","hdfs:///user/root/saidajob1/" \
 --region us-east-2
 ```
+___
 
-utilizando o S3 como input e output dos dados e resultados.
-![alt text](./images/image-1.png)
+### Utilizando o S3 como input e output dos dados
+
+***Resultado:***
+![alt text](./images/image-3.png)
+
 ```
 aws emr add-steps --cluster-id j-32R8POOJ1HIMA \
 --steps Type=CUSTOM_JAR,Name=Job2_P1,Jar=command-runner.jar,\
@@ -205,7 +305,12 @@ Args="flink","run","-m","yarn-cluster",\
 "--input","s3://bucket-logs-<account-id>/dados.txt","--output","s3://bucket-logs-<account-id>/" \
 --region us-east-2
 ```
+- Após o processamento ter sido finalizado, foi criado automatizamente uma pasta 2024-07-20--23 (que no seu pode ter outro nome) com o resultado do processamento que foi realizado.
 
+### ✅ E pronto! Dessa forma utilizamos o Apache Flink pra realizar um processamento em um Cluster EMR e temos o resultado deste processamento!  ✅
+
+- 📌 Vale ressaltar que foi um exemplo simples de processamento, com a ideia de mostrar como seria essa implementação e execução dessas rotinas.
+- 📌 Utilizando algum outro script e grandes conjuntos de dados por exemplo, esta mesma lógica serviria pra realizar um processamento em larga escala (temos que começar pequeno e ir escalando 😉 ); Como por exemplo, submeter um script em pyspark pra processamendo da Raw no S3 e escrever em Delta na Bronze.
 
 # ⚠️ Destruindo a infraestrutura com dois comandos.
 

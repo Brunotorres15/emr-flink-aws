@@ -1,0 +1,17 @@
+# Instruções
+
+# Execute o comando abaixo para criar a imagem Docker
+
+docker build -t emr-flink-aws-image:v1 .
+
+
+# Execute o comando abaixo para criar o container Docker
+
+docker run -dit --name emr-flink-aws-container -v ./IaC:/iac emr-flink-aws-image:v1 /bin/bash
+
+NOTA: No Windows você deve substituir ./IaC pelo caminho completo da pasta
+
+# Verifique as versões do Terraform e do AWS CLI com os comandos abaixo
+
+terraform version
+aws --version

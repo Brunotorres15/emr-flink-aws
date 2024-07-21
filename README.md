@@ -329,6 +329,10 @@ terraform apply terraform.tfplan
 
 ### Agora sempre que precisar dela, basta fazer o Terraform apply como foi mostrado no começo do projeto, e com dois comandos, você teria toda essa infraestrutura provisionada novamente 😉.
 
+Att, Bruno Torres.
+
+[Linkedin](https://www.linkedin.com/in/brunotorres05/)
+
 
 
 ## FIM.

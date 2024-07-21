@@ -1,6 +1,6 @@
 # Automatizando Infraestrutura de Processamento de Dados com AWS EMR e Apache Flink 🚀
 
-![alt text](./images/image.png)
+![alt text](./images/architecture.png)
 
 ### Qual o produto final desenvolvido?
 - ♨️ Foi criada uma solução de infraestrutura para processamento de dados, que pode rapidamente ser provisionada com dois comandos(sim, isso mesmo, dois comandos), podendo ser utilizada e adaptada para os mais variados tipos de demandas, seja para processamento moderado, até grandes volumes de dados.

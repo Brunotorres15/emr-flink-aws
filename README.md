@@ -90,7 +90,7 @@ terraform version
 
 
 📌 Crie um bucket no S3 chamado **emr-logs-\<account-id>** e configure no arquivo **emr.tf**,
-utilizaremos este bucket como uma fonte externa para guardar os logs do cluster. 
+utilizaremos este bucket como uma fonte externa para guardar os logs do cluster (troque o ***\<account-id>*** pelo id da sua conta aws, pra garantir que o nome do bucket seja único) .
 
 ### Configure as suas credenciais de acesso à AWS via cli
 ```
@@ -168,7 +168,7 @@ Além do Terraform você vai trabalhar com AWS, Azure e Databricks através de d
 Este é um curso realmente único, praticamente um trabalho de consultoria para você, no padrão de qualidade da Data Science Academy.
 ```
 
-### Copie o arquivo criado para o 
+### Copie o arquivo criado para o HDFS
 
 ```
 hdfs dfs -put dados.txt /user/root/input
@@ -192,7 +192,7 @@ flink run -m yarn-cluster /usr/lib/flink/examples/streaming/WordCount.jar --inpu
 hdfs dfs -ls /user/root/saida/
 ```
 
-### Copie o arquivo de saída no HDFS para o sistema de arquivos.
+### Copie o arquivo de saída do HDFS para o sistema de arquivos.
 ```
 hdfs dfs -get caminho-e-nome-arquivo-no-HDFS
 ```
@@ -304,7 +304,7 @@ aws emr add-steps --cluster-id j-32R8POOJ1HIMA \
 --steps Type=CUSTOM_JAR,Name=Job2_P1,Jar=command-runner.jar,\
 Args="flink","run","-m","yarn-cluster",\
 "/usr/lib/flink/examples/streaming/WordCount.jar",\
-"--input","s3://bucket-logs-<account-id>/dados.txt","--output","s3://bucket-logs-<account-id>/" \
+"--input","s3://emr-logs-<account-id>/dados.txt","--output","s3://emr-logs-<account-id>/" \
 --region us-east-2
 ```
 - Após o processamento ter sido finalizado, foi criado automaticamente uma pasta 2024-07-20--23 (que no seu pode ter outro nome) com o resultado do processamento que foi realizado.
@@ -331,4 +331,4 @@ terraform apply terraform.tfplan
 
 
 
-## FIM
+## FIM.

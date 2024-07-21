@@ -297,6 +297,8 @@ ___
 ***Resultado:***
 ![alt text](./images/image-3.png)
 
+- Utilizando o endpoint do s3 no lugar do HDFS
+
 ```
 aws emr add-steps --cluster-id j-32R8POOJ1HIMA \
 --steps Type=CUSTOM_JAR,Name=Job2_P1,Jar=command-runner.jar,\
@@ -305,7 +307,7 @@ Args="flink","run","-m","yarn-cluster",\
 "--input","s3://bucket-logs-<account-id>/dados.txt","--output","s3://bucket-logs-<account-id>/" \
 --region us-east-2
 ```
-- Após o processamento ter sido finalizado, foi criado automatizamente uma pasta 2024-07-20--23 (que no seu pode ter outro nome) com o resultado do processamento que foi realizado.
+- Após o processamento ter sido finalizado, foi criado automaticamente uma pasta 2024-07-20--23 (que no seu pode ter outro nome) com o resultado do processamento que foi realizado.
 
 ### ✅ E pronto! Dessa forma utilizamos o Apache Flink pra realizar um processamento em um Cluster EMR e temos o resultado deste processamento!  ✅
 
